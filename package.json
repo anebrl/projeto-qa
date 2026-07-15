@@ -1,0 +1,14 @@
+{
+  "name": "projeto-qa",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "cypress:run": "cypress run --spec \"cypress/e2e/ui-playground.cy.js\"",
+    "cypress:open": "cypress open",
+    "playwright:test": "playwright test tests/demoqa.spec.js"
+  },
+  "devDependencies": {
+    "cypress": "^13.2.0",
+    "@playwright/test": "^1.54.0"
+  }
+}

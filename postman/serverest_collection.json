@@ -1,0 +1,54 @@
+{
+  "info": {
+    "name": "ServeRest Login Test",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Realizar Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code deve ser 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Deve retornar token de autorização', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('authorization');",
+              "    pm.expect(jsonData.message).to.eql('Login realizado com sucesso');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"fulano@qa.com.br\",\n  \"password\": \"teste\"\n}"
+        },
+        "url": {
+          "raw": "https://serverest.dev/login",
+          "protocol": "https",
+          "host": [
+            "serverest",
+            "dev"
+          ],
+          "path": [
+            "login"
+          ]
+        }
+      }
+    }
+  ]
+}

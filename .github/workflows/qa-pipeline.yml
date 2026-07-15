@@ -1,0 +1,125 @@
+name: Pipeline de Testes Automatizados (QA)
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch: # Permite rodar o pipeline manualmente pelo GitHub
+
+jobs:
+  # --- 1. TESTES COM CYPRESS (UI Test Automation Playground) ---
+  cypress-tests:
+    name: Cypress - UI Playground
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Instalar Dependências
+        run: npm ci
+
+      - name: Executar Testes do Cypress
+        run: npx cypress run --spec "cypress/e2e/ui-playground.cy.js"
+
+      - name: Upload de Evidências (Prints e Vídeos)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidencias-cypress
+          path: |
+            cypress/screenshots
+            cypress/videos
+
+  # --- 2. TESTES COM PLAYWRIGHT (DemoQA) ---
+  playwright-tests:
+    name: Playwright - DemoQA
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Instalar Dependências
+        run: npm ci
+
+      - name: Instalar Navegadores do Playwright
+        run: npx playwright install --with-deps
+
+      - name: Executar Testes do Playwright
+        run: npx playwright test tests/demoqa.spec.js
+
+      - name: Upload do Relatório do Playwright
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-playwright
+          path: playwright-report/
+
+  # --- 3. TESTES COM SELENIUM + JUNIT (Automation Testing Practice) ---
+  selenium-junit-tests:
+    name: Selenium & JUnit - Testing Practice
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: Configurar Java JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      # Observação: O Chrome e o ChromeDriver já vêm pré-instalados no agente ubuntu-latest do GitHub Actions.
+      # O Selenium 4 gerencia o driver automaticamente se configurado corretamente no código Java.
+
+      - name: Executar Testes com Maven
+        run: mvn clean test -Dtest=AutomationTestingPracticeTest
+
+      - name: Upload dos Relatórios do JUnit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorios-junit
+          path: target/surefire-reports/
+
+  # --- 4. TESTES COM POSTMAN/NEWMAN (Front - Serverest API) ---
+  postman-tests:
+    name: Postman & Newman - ServeRest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar Newman e Report HTML Extra
+        run: npm install -g newman newman-reporter-htmlextra
+
+      - name: Executar Testes da API (ServeRest)
+        run: |
+          newman run postman/serverest_collection.json \
+            -e postman/serverest_env.json \
+            -r cli,htmlextra --reporter-htmlextra-export postman/report.html
+
+      - name: Upload do Relatório HTML do Postman
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-postman
+          path: postman/report.html
