@@ -1,6 +1,6 @@
 # Projeto QA
 
-Este repositório contém um exemplo de automação de testes com Cypress e Playwright para execução em pipeline no GitHub Actions.
+Este repositório reúne automação de testes com Cypress, Playwright, Selenium/JUnit e Postman/Newman, com um pipeline pronto para execução no GitHub Actions.
 
 ## Tecnologias utilizadas
 
@@ -8,37 +8,46 @@ Este repositório contém um exemplo de automação de testes com Cypress e Play
 - npm
 - Cypress
 - Playwright
+- Java + Maven
+- Selenium WebDriver
+- JUnit 5
+- Postman/Newman
 
 ## Estrutura do projeto
 
 ```text
-meu-projeto-qa/
+projeto-qa/
 ├── .github/
 │   └── workflows/
-│       └── qa-pipeline.yml       # O arquivo do pipeline abaixo
+│       └── qa-pipeline.yml       # Pipeline de CI com Cypress, Playwright, Selenium e Postman
 ├── cypress/
 │   └── e2e/
 │       └── ui-playground.cy.js   # Testes do UI Test Automation Playground
 ├── tests/
 │   └── demoqa.spec.js            # Testes do DemoQA com Playwright
 ├── postman/
-│   ├── serverest_collection.json # Collection do Serverest
-│   └── serverest_env.json        # Environment do Serverest
-├── src/test/java/...             # Testes Selenium + JUnit (Automation Testing Practice)
-├── pom.xml                       # Configuração do Maven (Java/Selenium/JUnit)
-├── package.json                  # Dependências do Node.js (Cypress e Playwright)
-└── playwright.config.js          # Configuração do Playwright
+│   ├── serverest_collection.json # Collection do ServeRest
+│   └── serverest_env.json        # Environment do ServeRest
+├── src/test/java/
+│   └── AutomationTestingPracticeTest.java # Teste Selenium + JUnit
+├── cypress.config.js             # Configuração do Cypress
+├── playwright.config.js          # Configuração do Playwright
+├── package.json                  # Dependências do Node.js e scripts de execução
+├── pom.xml                       # Configuração do Maven para Selenium/JUnit
+└── README.md                     # Documentação do projeto
 ```
 
 ## Pré-requisitos
 
 - Node.js 18+ instalado
 - npm instalado
+- Java 17+ para a suíte Selenium/JUnit
+- Maven disponível no PATH
 - Git
 
 ## Instalação
 
-No diretório do projeto, execute:
+Na raiz do projeto, execute:
 
 ```bash
 npm install
@@ -58,6 +67,18 @@ npm run cypress:run
 npm run playwright:test
 ```
 
+### Selenium + JUnit
+
+```bash
+mvn -B clean test -Dtest=AutomationTestingPracticeTest
+```
+
+### Postman/Newman
+
+```bash
+npx newman run postman/serverest_collection.json -e postman/serverest_env.json -r cli
+```
+
 ## Executando localmente no modo interativo
 
 ```bash
@@ -66,42 +87,27 @@ npm run cypress:open
 
 ## Pipeline no GitHub Actions
 
-Este projeto pode ser integrado a um workflow do GitHub Actions para executar os testes automaticamente a cada push ou pull request.
+O workflow em [.github/workflows/qa-pipeline.yml](.github/workflows/qa-pipeline.yml) executa os testes automaticamente em push, pull request e execução manual.
 
-Exemplo de arquivo de workflow:
+### Jobs do pipeline
 
-```yaml
-name: QA CI
+- Cypress: valida o fluxo de UI do playground
+- Playwright: executa os testes do DemoQA
+- Selenium/JUnit: roda o teste de formulário no Java
+- Postman/Newman: executa a collection da API ServeRest
 
-on:
-  push:
-    branches: [ main , master ]
-  pull_request:
-    branches: [ main , master ]
+### Artefatos gerados
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run Cypress tests
-        run: npm run cypress:run
-```
+- evidências do Cypress
+- relatório do Playwright
+- relatórios JUnit
+- relatório HTML do Newman
 
 ## Observações
 
-- O teste Cypress presente no projeto valida uma interação simples na página UI Test Automation Playground.
-- O projeto já está configurado para rodar em modo headless.
+- O teste Cypress foi validado em modo headless.
+- O Playwright precisa dos browsers instalados antes da execução; no CI isso é feito automaticamente.
+- O pipeline foi preparado para rodar em ambientes Ubuntu do GitHub Actions.
 
 ## Autor
 
