@@ -25,6 +25,9 @@ jobs:
       - name: Instalar Dependências
         run: npm ci
 
+      - name: Verificar estrutura do projeto
+        run: ls -R
+
       - name: Executar Testes do Cypress
         run: npx cypress run --spec "cypress/e2e/ui-playground.cy.js"
 
@@ -57,8 +60,11 @@ jobs:
       - name: Instalar Navegadores do Playwright
         run: npx playwright install --with-deps chromium
 
+      - name: Verificar estrutura de testes do Playwright
+        run: ls -R testes || true
+
       - name: Executar Testes do Playwright
-        run: npx playwright test tests/demoqa.spec.js
+        run: npx playwright test
 
       - name: Upload do Relatório do Playwright
         if: always()
@@ -81,6 +87,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           cache: 'maven'
+
+      - name: Verificar instalação do Maven
+        run: mvn -version
 
       # Observação: O Chrome e o ChromeDriver já vêm pré-instalados no agente ubuntu-latest do GitHub Actions.
       # O Selenium 4 gerencia o driver automaticamente se configurado corretamente no código Java.
