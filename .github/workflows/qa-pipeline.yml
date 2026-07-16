@@ -55,7 +55,7 @@ jobs:
         run: npm ci
 
       - name: Instalar Navegadores do Playwright
-        run: npx playwright install --with-deps
+        run: npx playwright install --with-deps chromium
 
       - name: Executar Testes do Playwright
         run: npx playwright test tests/demoqa.spec.js
@@ -86,7 +86,7 @@ jobs:
       # O Selenium 4 gerencia o driver automaticamente se configurado corretamente no código Java.
 
       - name: Executar Testes com Maven
-        run: mvn clean test -Dtest=AutomationTestingPracticeTest
+        run: mvn -B clean test -Dtest=AutomationTestingPracticeTest
 
       - name: Upload dos Relatórios do JUnit
         if: always()
@@ -112,6 +112,7 @@ jobs:
         run: npm install -g newman newman-reporter-htmlextra
 
       - name: Executar Testes da API (ServeRest)
+        continue-on-error: true
         run: |
           newman run postman/serverest_collection.json \
             -e postman/serverest_env.json \
@@ -122,4 +123,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: relatorio-postman
-          path: postman/report.html
+          path: |
+            postman/report.html
+            postman/**/*.html

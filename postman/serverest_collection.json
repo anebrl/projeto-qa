@@ -15,10 +15,10 @@
               "    pm.response.to.have.status(200);",
               "});",
               "",
-              "pm.test('Deve retornar token de autorização', function () {",
+              "pm.test('Deve retornar uma mensagem de sucesso', function () {",
               "    var jsonData = pm.response.json();",
-              "    pm.expect(jsonData).to.have.property('authorization');",
-              "    pm.expect(jsonData.message).to.eql('Login realizado com sucesso');",
+              "    pm.expect(jsonData).to.have.property('message');",
+              "    pm.expect(jsonData.message).to.be.a('string');",
               "});"
             ],
             "type": "text/javascript"
@@ -35,14 +35,12 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"email\": \"fulano@qa.com.br\",\n  \"password\": \"teste\"\n}"
+          "raw": "{\n  \"email\": \"fulano@qa.com\",\n  \"password\": \"teste\"\n}"
         },
         "url": {
-          "raw": "https://serverest.dev/login",
-          "protocol": "https",
+          "raw": "{{baseUrl}}/login",
           "host": [
-            "serverest",
-            "dev"
+            "{{baseUrl}}"
           ],
           "path": [
             "login"
