@@ -111,4 +111,4 @@ O workflow em [.github/workflows/qa-pipeline.yml](.github/workflows/qa-pipeline.
 
 ## Autor
 
-Projeto de automação de testes QA.
+Rosiane Lima - Linkedin https://www.linkedin.com/in/rosiane-lima-b6839bbb/
