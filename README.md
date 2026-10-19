@@ -29,7 +29,8 @@ projeto-qa/
 │   ├── serverest_collection.json # Collection do ServeRest
 │   └── serverest_env.json        # Environment do ServeRest
 ├── src/test/java/
-│   └── AutomationTestingPracticeTest.java # Teste Selenium + JUnit
+│   ├── AutomationTestingPracticeTest.java # Teste Selenium + JUnit
+│   └── DemoQAFormBoundaryTest.java        # Limite de 10 dígitos no campo Mobile do DemoQA
 ├── cypress.config.js             # Configuração do Cypress
 ├── playwright.config.js          # Configuração do Playwright
 ├── package.json                  # Dependências do Node.js e scripts de execução
@@ -41,7 +42,7 @@ projeto-qa/
 
 - Node.js 18+ instalado
 - npm instalado
-- Java 17+ para a suíte Selenium/JUnit
+- Java 25 LTS para a suíte Selenium/JUnit
 - Maven disponível no PATH
 - Git
 
@@ -70,7 +71,7 @@ npm run playwright:test
 ### Selenium + JUnit
 
 ```bash
-mvn -B clean test -Dtest=AutomationTestingPracticeTest
+mvn -B clean test -Dtest=AutomationTestingPracticeTest,DemoQAFormBoundaryTest
 ```
 
 ### Postman/Newman
